@@ -19,26 +19,8 @@ namespace PrefabControlRuntimeTest
         public Form1()
         {
             InitializeComponent();
-            NumberOfRows = tableLayoutPanel1.RowCount;
-            AddNewIngredientRow();
-        }
-
-
-        private string TranslatePhraseIntoAbreviationByNumberOfCharactersBetweenFirstAndLast(string phrase)
-        {
-            string[] wordsInPhrase = phrase.Split(' ');
-            string answerPhrase = "";
-
-            foreach (string word in wordsInPhrase)
-            {
-                if (word.Length > 3)
-                    answerPhrase += word.First() + (word.Length - 2).ToString() + word.Last() + " ";
-                else
-                    answerPhrase += word + " ";
-            }
-
-            answerPhrase.TrimEnd(' ');
-            return answerPhrase;
+            NumberOfRows = tableLayoutPanel1.RowCount; //Get the current number of rows in the table
+            AddNewIngredientRow(); //Add the first row on initialization
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -48,23 +30,35 @@ namespace PrefabControlRuntimeTest
 
         private void AddNewIngredientRow()
         {
+            //Increment the number of Rows
             NumberOfRows++;
+
             //Set the new row's style
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            //                             control, column index, row index
-            TextBox recipeTemplate = GetTextboxTemplate();
-            tableLayoutPanel1.Controls.Add(GetTextboxTemplate(), 0, NumberOfRows - 1);
-            IngredientNames.Add(recipeTemplate);
 
-            TextBox servingsTemplate = GetTextboxTemplate();
+            //Grab a copy of the TextBox Template
+            TextBox ingredientTemplate = GetTextboxTemplate();
+            //Add it into a new row
+            tableLayoutPanel1.Controls.Add(GetTextboxTemplate(), 0, NumberOfRows - 1); //control, column index, row index
+            //Save a reference for when all input is complete
+            IngredientNames.Add(ingredientTemplate);
+
+            TextBox amountTemplate = GetTextboxTemplate();
             tableLayoutPanel1.Controls.Add(GetTextboxTemplate(), 1, NumberOfRows - 1);
-            Amount.Add(servingsTemplate);
+            Amount.Add(amountTemplate);
         }
 
         private TextBox GetTextboxTemplate()
         {
+            //Any customization for the textbox would be done here
+            //If Ingredient Textboxes have different customization/vaildation rules than the amount textbox,
+            //we can split this into two functions, and assign them accordingly
             return new TextBox();
         }
 
+        private void button2_Click(object sender, EventArgs e)
+        {
+            //TODO: remove row code
+        }
     }
 }
