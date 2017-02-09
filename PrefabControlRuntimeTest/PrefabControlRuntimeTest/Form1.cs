@@ -13,14 +13,15 @@ namespace PrefabControlRuntimeTest
     public partial class Form1 : Form
     {
         private int NumberOfRows;
-        private List<TextBox> IngredientNames = new List<TextBox>();
-        private List<TextBox> Amount = new List<TextBox>();
+        private List<TextBox> IngredientNameTxtBoxes = new List<TextBox>();
+        private List<TextBox> AmountTxtBoxes = new List<TextBox>();
 
         public Form1()
         {
             InitializeComponent();
             NumberOfRows = tableLayoutPanel1.RowCount; //Get the current number of rows in the table
             AddNewIngredientRow(); //Add the first row on initialization
+            button2.Enabled = false;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -41,11 +42,14 @@ namespace PrefabControlRuntimeTest
             //Add it into a new row
             tableLayoutPanel1.Controls.Add(GetTextboxTemplate(), 0, NumberOfRows - 1); //control, column index, row index
             //Save a reference for when all input is complete
-            IngredientNames.Add(ingredientTemplate);
+            IngredientNameTxtBoxes.Add(ingredientTemplate);
 
             TextBox amountTemplate = GetTextboxTemplate();
             tableLayoutPanel1.Controls.Add(GetTextboxTemplate(), 1, NumberOfRows - 1);
-            Amount.Add(amountTemplate);
+            AmountTxtBoxes.Add(amountTemplate);
+
+            if (NumberOfRows > 2)
+                button2.Enabled = true;
         }
 
         private TextBox GetTextboxTemplate()
@@ -58,7 +62,25 @@ namespace PrefabControlRuntimeTest
 
         private void button2_Click(object sender, EventArgs e)
         {
-            //TODO: remove row code
+            NumberOfRows--;
+
+            //Remove the controls
+            for (int i = 0; i < tableLayoutPanel1.ColumnCount; i++)
+            {
+                Control controlToRemove = tableLayoutPanel1.GetControlFromPosition(i, NumberOfRows);
+                tableLayoutPanel1.Controls.Remove(controlToRemove);
+            }
+
+            //Remove the row from the table
+            tableLayoutPanel1.RowStyles.RemoveAt(NumberOfRows - 1);
+            tableLayoutPanel1.RowCount = NumberOfRows - 1;
+
+            //Remove the saved references from the list
+            IngredientNameTxtBoxes.RemoveAt(IngredientNameTxtBoxes.Count - 1);
+            AmountTxtBoxes.RemoveAt(AmountTxtBoxes.Count - 1);
+
+            if (NumberOfRows == 2)
+                button2.Enabled = false;
         }
     }
 }
